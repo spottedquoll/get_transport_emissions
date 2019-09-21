@@ -5,10 +5,11 @@ results_df = DataFrame()
 year = 2012
 transport_dir = os.environ['TRANSPORT_DIR']
 data_dir = transport_dir + '/edgar_data/'
-unit_scale = 1 * 10e9 * (1/10e6) * (1/10e6)  # Gg to MT
+unit_scale = 1e9 / 1e12
 emissions_files = ['v432_CO2_excl_short-cycle_org_C_1970_2012', 'v432_CO2_org_short-cycle_C_1970_2012'
                    , 'v432_PM2.5_fossil_1970_2012', 'v432_PM2.5_bio_1970_2012', 'v432_PM10_1970_2012'
-                   , 'v432_CH4_1970_2012', 'v432_NOx_1970_2012', 'v432_SO2_1970_2012', 'v432_N2O_1970_2012']
+                   , 'v432_CH4_1970_2012', 'v432_NOx_1970_2012', 'v432_SO2_1970_2012', 'v432_N2O_1970_2012'
+                   , 'v432_BC_1970_2012']
 
 for file in emissions_files:
 
