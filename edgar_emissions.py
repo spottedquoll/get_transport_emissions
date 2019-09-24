@@ -50,21 +50,39 @@ for file in emissions_files:
 
 results_df.to_csv(transport_dir + '/edgar_transport_summary.csv')
 
-# # Calculate trend in CO2
-# co2_emissions_files = ['v432_CO2_excl_short-cycle_org_C_1970_2012', 'v432_CO2_org_short-cycle_C_1970_2012']
-# for file in co2_emissions_files:
-#
-#     # Read raw data
-#     print('Reading ' + file)
-#     df = read_excel(data_dir + file + '.xls', header=7)
-#
-#     # total emissions
-#
-#     # transport emissions
+# Calculate trend in CO2
+print('Calculating trend in transport emissions')
+co2_emissions_files = ['v432_CO2_excl_short-cycle_org_C_1970_2012', 'v432_CO2_org_short-cycle_C_1970_2012']
+
+df_co2 = read_excel(data_dir + co2_emissions_files[0] + '.xls', header=7)
+df_short = read_excel(data_dir + co2_emissions_files[1] + '.xls', header=7)
+
+results = []
+
+for trend_year in range(2000, 2013):
+    totals = {'year': trend_year}
+
+    series_name = 'co2_sc'
+    for it in international_cats:
+        cat_total = df_co2[df_co2['Name'] == it][trend_year].sum() * unit_scale
+        totals[series_name + '_' + it] = cat_total
+
+    totals[series_name + '_total'] = df_co2[trend_year].sum() * unit_scale
+
+    series_name = 'co2_excl_sc'
+    for it in international_cats:
+        cat_total = df_short[df_short['Name'] == it][trend_year].sum() * unit_scale
+        totals[series_name + '_' + it] = cat_total
+
+    totals[series_name + '_total'] = df_short[trend_year].sum() * unit_scale
+
+    results.append(totals)
+
+DataFrame(results).to_csv(transport_dir + '/edgar_intl_transport_trend.csv')
 
 # FAO data
 print('Reading FAO data')
-gc.collect()  # FAO are large so clear memory
+gc.collect()  # FAO data are large so clear memory
 
 data_dir = transport_dir + '/fao_data/'
 fao_prod_df = read_excel(data_dir + 'Production_Crops_E_All_Data.xlsx')
